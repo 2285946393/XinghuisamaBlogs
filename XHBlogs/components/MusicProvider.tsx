@@ -82,6 +82,17 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let isMounted = true;
+
+    const LOCAL_PLAYLIST = (siteConfig.localMusic || []).map((m: any) => ({
+      id: m.src,
+      title: m.title || '未知歌曲',
+      artist: m.artist || '未知歌手',
+      cover: m.cover || '/album/private-4a.jpg',
+      src: m.src,
+      lrcUrl: null,
+      lyrics: []
+    }));
+
     const fetchMusicData = async () => {
       try {
         const res = await fetch(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`);
@@ -93,11 +104,12 @@ export function MusicProvider({ children }: { children: ReactNode }) {
             id: song.id || Math.random().toString(),
             title: song.name || '未知歌曲',
             artist: song.artist || song.author || '未知歌手',
-            cover: song.cover || song.pic || 'https://bu.dusays.com/2026/03/24/69c24230a5ff8.jpg',
+            cover: song.cover || song.pic || '/album/private-4a.jpg',
             src: song.url,
             lrcUrl: null,
             lyrics: song.lrc ? parseLrc(song.lrc) : []
-          }));
+          }))
+          .concat(LOCAL_PLAYLIST);
 
         if (isMounted) {
           if (mergedPlaylist.length > 0) setPlaylist(mergedPlaylist);
@@ -110,7 +122,10 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     };
 
     if (siteConfig.cloudMusicIds?.length > 0) fetchMusicData();
-    else setIsLoading(false);
+    else {
+      if (LOCAL_PLAYLIST.length > 0) setPlaylist(LOCAL_PLAYLIST);
+      setIsLoading(false);
+    }
 
     return () => { isMounted = false; };
   }, []);

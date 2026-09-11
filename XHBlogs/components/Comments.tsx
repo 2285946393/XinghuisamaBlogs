@@ -12,8 +12,12 @@ export default function Comments() {
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
+  // 守卫：Gitalk 配置不完整时不渲染评论区，避免对游客裸奔报错
+  const gitalkEnabled = Boolean(siteConfig.gitalkConfig.clientID && siteConfig.gitalkConfig.repo && siteConfig.gitalkConfig.owner);
+
   useEffect(() => {
     if (!containerRef.current) return;
+    if (!gitalkEnabled) return;
 
     // 清空之前的评论区（防止 Next.js 路由切换时重复渲染）
     containerRef.current.innerHTML = '';
@@ -42,7 +46,7 @@ export default function Comments() {
       window.history.replaceState({}, document.title, url.toString());
     }
 
-  }, [pathname]);
+  }, [pathname, gitalkEnabled]);
 
   return (
     <div className="w-full mt-16 relative">

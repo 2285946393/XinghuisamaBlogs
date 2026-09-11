@@ -12,8 +12,12 @@ export default function LabComments({ pageId }: { pageId?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
+  // 守卫：Gitalk 配置不完整时不渲染评论区
+  const gitalkEnabled = Boolean(siteConfig.gitalkConfig.clientID && siteConfig.gitalkConfig.repo && siteConfig.gitalkConfig.owner);
+
   useEffect(() => {
     if (!containerRef.current) return;
+    if (!gitalkEnabled) return;
 
     // 清空之前的评论区，防止切换月份时叠加
     containerRef.current.innerHTML = '';
@@ -41,7 +45,7 @@ export default function LabComments({ pageId }: { pageId?: string }) {
       window.history.replaceState({}, document.title, url.toString());
     }
 
-  }, [pathname, pageId]);
+  }, [pathname, pageId, gitalkEnabled]);
 
   return (
     <div className="w-full mt-16 relative">
