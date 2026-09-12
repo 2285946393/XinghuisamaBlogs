@@ -80,7 +80,7 @@ export default function AboutClient({
     startDate.setDate(endDate.getDate() - 364);
     startDate.setDate(startDate.getDate() - startDate.getDay());
 
-    let curr = new Date(startDate);
+    const curr = new Date(startDate);
     const weeksArr = [];
     let currentWeek = [];
 

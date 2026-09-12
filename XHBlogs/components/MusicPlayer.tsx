@@ -7,7 +7,7 @@ function parseLrc(lrcText: string) {
   if (!lrcText || lrcText.length > 20000) return [];
   const lines = lrcText.split('\n');
   const result = [];
-  for (let line of lines) {
+  for (const line of lines) {
     const matches = [...line.matchAll(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?\]/g)];
     if (matches.length > 0) {
       const text = line.replace(/\[\d{2,}:\d{2}(?:\.\d{2,3})?\]/g, '').trim();

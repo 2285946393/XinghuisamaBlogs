@@ -10,10 +10,10 @@ function parseLrc(lrcText: string) {
   const lines = lrcText.split(/\r?\n/);
   const result = [];
 
-  for (let line of lines) {
+  for (const line of lines) {
     const matches = [...line.matchAll(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?\]/g)];
     if (matches.length > 0) {
-      let text = line.replace(/\[\d{2,}:\d{2}(?:\.\d{2,3})?\]/g, '').trim();
+      const text = line.replace(/\[\d{2,}:\d{2}(?:\.\d{2,3})?\]/g, '').trim();
 
       // 剔除控制字符
       const cleanText = text.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g, "");

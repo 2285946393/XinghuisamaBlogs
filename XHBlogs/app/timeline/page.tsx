@@ -14,8 +14,8 @@ export const metadata = {
 
 export default function Timeline() {
   const postsDirectory = path.join(process.cwd(), 'posts');
-  let posts: any[] = [];
-  let tagCounts: Record<string, number> = {};
+  const posts: any[] = [];
+  const tagCounts: Record<string, number> = {};
 
   try {
     if (fs.existsSync(postsDirectory)) {

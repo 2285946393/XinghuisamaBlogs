@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // public 只放静态资源与第三方单文件作品（lab / trombone 等），不参与 lint
+    "public/**",
   ]),
 ]);
 
