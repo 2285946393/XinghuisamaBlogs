@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>边界千年 · 历史地图册 | 有花无实の小站</title>
+<style>
+  :root {
+    --bg: #0b0a12;
+    --ink: #e8e0f0;
+    --sub: #9a8fb0;
+    --accent: #f6a8c8;
+    --line: rgba(246, 168, 200, 0.28);
+    --panel: rgba(20, 17, 32, 0.82);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px 4px;
+    z-index: 5;
+  }
+  #topbar h1 { font-size: 18px; font-weight: 600; letter-spacing: 2px; }
+  #topbar h1 em { font-style: normal; color: var(--accent); }
+  #topbar .back {
+    color: var(--sub);
+    text-decoration: none;
+    font-size: 13px;
+    margin-right: 12px;
+  }
+  #topbar .back:hover { color: var(--accent); }
+  #projSel {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 13px;
+    outline: none;
+  }
+  #stage { position: relative; flex: 1; min-height: 0; }
+  #map { width: 100%; height: 100%; display: block; cursor: grab; }
+  #map:active { cursor: grabbing; }
+  .states path { stroke: var(--bg); stroke-width: 0.4; }
+  .states path.dim { opacity: 0.12; }
+  .states path.hit { stroke: #fff; stroke-width: 1.6; }
+  #yearMask {
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+  }
+  #yearBig {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(44px, 7vw, 84px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-shadow: 0 0 26px rgba(246, 168, 200, 0.45), 0 2px 8px rgba(0,0,0,0.9);
+  }
+  #yearNote { font-size: 14px; color: var(--sub); margin-top: 2px; letter-spacing: 1px; }
+  #tip {
+    position: absolute;
+    display: none;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    pointer-events: none;
+    max-width: 260px;
+    backdrop-filter: blur(6px);
+    z-index: 9;
+  }
+  #tip small { color: var(--sub); display: block; margin-top: 2px; }
+  #card {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    width: 230px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    backdrop-filter: blur(8px);
+    display: none;
+    z-index: 8;
+  }
+  #card h3 { font-size: 16px; color: var(--accent); margin-bottom: 6px; }
+  #card p { font-size: 13px; line-height: 1.7; color: var(--ink); }
+  #card p b { color: var(--sub); font-weight: normal; }
+  #card .close { position: absolute; top: 6px; right: 10px; cursor: pointer; color: var(--sub); }
+  #bar {
+    position: absolute;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), #b8a8f0);
+    transition: width 0.4s, opacity 0.4s;
+    z-index: 10;
+  }
+  #controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px 12px;
+    background: linear-gradient(rgba(11,10,18,0), rgba(11,10,18,0.9) 40%);
+    z-index: 5;
+  }
+  .btn {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    min-width: 40px;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 15px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.on { background: var(--accent); color: #1a1020; border-color: var(--accent); }
+  #slider { flex: 1; accent-color: var(--accent); height: 22px; cursor: pointer; }
+  #search {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--ink);
+    height: 36px;
+    padding: 0 12px;
+    font-size: 13px;
+    width: 150px;
+    outline: none;
+    flex-shrink: 0;
+  }
+  #chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 18px 10px; }
+  .chip {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--sub);
+    cursor: pointer;
+    background: transparent;
+  }
+  .chip:hover { color: var(--accent); border-color: var(--accent); }
+  #credit { position: absolute; left: 14px; bottom: 10px; font-size: 11px; color: #5c5470; z-index: 4; }
+  #credit a { color: #7a6f95; }
+  #toast {
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: none;
+    z-index: 11;
+  }
+  @media (max-width: 720px) {
+    #controls { flex-wrap: wrap; gap: 8px; }
+    #slider { order: 5; flex-basis: 100%; }
+    #search { width: 110px; }
+    #card { width: 190px; }
+    #chips { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <h1><a class="back" href="/">← 小站</a>边界<em>千年</em> · 历史地图册</h1>
+  <select id="projSel" title="投影方式">
+    <option value="airocean">艾若克恩投影</option>
+    <option value="natural">自然地球投影</option>
+    <option value="equal">等积伪圆柱</option>
+  </select>
+</div>
+
+<div id="stage">
+  <div id="bar"></div>
+  <svg id="map" viewBox="0 0 1500 900" preserveAspectRatio="xMidYMid meet"></svg>
+  <div id="yearMask">
+    <div id="yearBig">—</div>
+    <div id="yearNote"></div>
+  </div>
+  <div id="tip"></div>
+  <div id="card">
+    <span class="close" onclick="hideCard()">✕</span>
+    <h3 id="cardName"></h3>
+    <p id="cardBody"></p>
+  </div>
+  <div id="credit">数据 © <a href="https://github.com/aourednik/historical-basemaps" target="_blank" rel="noopener">aourednik / historical-basemaps</a> · GPL-3.0 · 边界定性粗糙，前现代国界请当"势力范围"看</div>
+  <div id="toast"></div>
+</div>
+
+<div id="controls">
+  <button class="btn" id="prevBtn" title="上一年">⏮</button>
+  <button class="btn" id="playBtn" title="播放千年">▶</button>
+  <button class="btn" id="nextBtn" title="下一年">⏭</button>
+  <input type="range" id="slider" min="0" max="53" value="45">
+  <input id="search" type="text" placeholder="🔍 搜国家/文明">
+</div>
+<div id="chips"></div>
+
+<script src="lib/d3.v5.min.js"></script>
+<script src="lib/d3-geo.v1.min.js"></script>
+<script src="lib/d3-geo-projection.v2.min.js"></script>
+<script src="lib/d3-geo-polygon.min.js"></script>
+<script src="lib/d3-scale-chromatic.v3.js"></script>
+<script>
+var YEARS = [{"y":-123000,"f":"world_bc123000.geojson"},{"y":-10000,"f":"world_bc10000.geojson"},{"y":-8000,"f":"world_bc8000.geojson"},{"y":-5000,"f":"world_bc5000.geojson"},{"y":-4000,"f":"world_bc4000.geojson"},{"y":-3000,"f":"world_bc3000.geojson"},{"y":-2000,"f":"world_bc2000.geojson"},{"y":-1500,"f":"world_bc1500.geojson"},{"y":-1000,"f":"world_bc1000.geojson"},{"y":-700,"f":"world_bc700.geojson"},{"y":-500,"f":"world_bc500.geojson"},{"y":-400,"f":"world_bc400.geojson"},{"y":-323,"f":"world_bc323.geojson"},{"y":-300,"f":"world_bc300.geojson"},{"y":-200,"f":"world_bc200.geojson"},{"y":-100,"f":"world_bc100.geojson"},{"y":-1,"f":"world_bc1.geojson"},{"y":100,"f":"world_100.geojson"},{"y":200,"f":"world_200.geojson"},{"y":300,"f":"world_300.geojson"},{"y":400,"f":"world_400.geojson"},{"y":500,"f":"world_500.geojson"},{"y":600,"f":"world_600.geojson"},{"y":700,"f":"world_700.geojson"},{"y":800,"f":"world_800.geojson"},{"y":900,"f":"world_900.geojson"},{"y":1000,"f":"world_1000.geojson"},{"y":1100,"f":"world_1100.geojson"},{"y":1200,"f":"world_1200.geojson"},{"y":1279,"f":"world_1279.geojson"},{"y":1300,"f":"world_1300.geojson"},{"y":1400,"f":"world_1400.geojson"},{"y":1492,"f":"world_1492.geojson"},{"y":1500,"f":"world_1500.geojson"},{"y":1530,"f":"world_1530.geojson"},{"y":1600,"f":"world_1600.geojson"},{"y":1650,"f":"world_1650.geojson"},{"y":1700,"f":"world_1700.geojson"},{"y":1715,"f":"world_1715.geojson"},{"y":1783,"f":"world_1783.geojson"},{"y":1800,"f":"world_1800.geojson"},{"y":1815,"f":"world_1815.geojson"},{"y":1878,"f":"world_1878.geojson"},{"y":1880,"f":"world_1880.geojson"},{"y":1900,"f":"world_1900.geojson"},{"y":1914,"f":"world_1914.geojson"},{"y":1920,"f":"world_1920.geojson"},{"y":1930,"f":"world_1930.geojson"},{"y":1938,"f":"world_1938.geojson"},{"y":1945,"f":"world_1945.geojson"},{"y":1960,"f":"world_1960.geojson"},{"y":1994,"f":"world_1994.geojson"},{"y":2000,"f":"world_2000.geojson"},{"y":2010,"f":"world_2010.geojson"}];
+
+var KEYNOTE = {
+  "-123000": "智人与尼安德特人的世界",
+  "-10000": "冰期结束，农业黎明前夜",
+  "-3000": "最早的城市与文字诞生",
+  "-500": "波斯帝国——第一个超级大国",
+  "-323": "亚历山大的帝国在他死的那年",
+  "-1": "耶稣诞生之年，三大帝国并立",
+  "100": "罗马帝国极盛，汉帝国并峙东方",
+  "400": "罗马分裂，笈多王朝治下印度",
+  "600": "隋朝重新统一中国",
+  "800": "查理曼加冕，阿拔斯黄金时代",
+  "1000": "维京人抵达北美前夕",
+  "1279": "蒙古帝国——史上最大连续疆域",
+  "1492": "哥伦布出海，大交换开始",
+  "1650": "威斯特伐利亚体系之后",
+  "1783": "美利坚合众国诞生",
+  "1815": "维也纳会议，拿破仑时代落幕",
+  "1880": "欧洲列强瓜分非洲",
+  "1914": "第一次世界大战爆发",
+  "1938": "第二次世界大战前夕",
+  "1945": "二战结束，联合国成立",
+  "1960": "非洲年——17国独立",
+  "1994": "苏联解体后的世界",
+  "2010": "今天的世界"
+};
+
+var WIDTH = 1500, HEIGHT = 900;
+var svg = d3.select("#map");
+var g = svg.append("g").attr("class", "states");
+var projection = null, pathGen = null;
+var curIdx = -1, playing = false, timer = null;
+var cache = new Map();
+var sliderEl = document.getElementById("slider");
+var barEl = document.getElementById("bar");
+var tipEl = document.getElementById("tip");
+var stageEl = document.getElementById("stage");
+
+function yearLabel(y) {
+  if (y < 0) return (-y).toLocaleString() + " BCE";
+  return String(y);
+}
+function noteFor(y) { return KEYNOTE[String(y)] || ""; }
+
+function makeProjection(kind) {
+  if (kind === "airocean") {
+    return d3.geoAirocean().scale(95).translate([WIDTH / 2, HEIGHT / 2]).precision(0.1);
+  }
+  if (kind === "natural") {
+    return d3.geoNaturalEarth1().scale(240).translate([WIDTH / 2, HEIGHT / 2]).precision(0.3);
+  }
+  return d3.geoEqualEarth().scale(240).translate([WIDTH / 2, HEIGHT / 2]).precision(0.3);
+}
+
+function setProjection(kind) {
+  projection = makeProjection(kind);
+  pathGen = d3.geoPath().projection(projection);
+  g.selectAll("path").transition().duration(700).attr("d", function (d) { return pathGen(d); });
+  g.selectAll("path.empty-ok").attr("d", pathGen);
+}
+
+var zoom = d3.zoom().scaleExtent([0.7, 24]).on("zoom", function () {
+  g.attr("transform", d3.event.transform);
+});
+svg.call(zoom);
+
+function barStart() { barEl.style.opacity = "1"; barEl.style.width = "30%"; }
+function barMid() { barEl.style.width = "75%"; }
+function barDone() { barEl.style.width = "100%"; setTimeout(function () { barEl.style.opacity = "0"; }, 350); }
+
+function toast(msg, ms) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  clearTimeout(t._tm);
+  t._tm = setTimeout(function () { t.style.display = "none"; }, ms || 2600);
+}
+
+function loadData(file) {
+  if (cache.has(file)) return Promise.resolve(cache.get(file));
+  barStart();
+  return fetch("geojson/" + file, { cache: "force-cache" })
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function (j) {
+      if (cache.size > 6) cache.delete(cache.keys().next().value);
+      cache.set(file, j);
+      return j;
+    })
+    .finally(barDone);
+}
+
+function colorFor(name, catIdx) {
+  if (name === null || name === undefined) return "#332f3f";
+  if (name === "unclaimed") return "#3d3a48";
+  if (name === "Antarctica") return "#e6eefa";
+  return d3.interpolateWarm(catIdx);
+}
+
+function featureName(d) { return d.properties.NAME; }
+function featureSubject(d) { return d.properties.SUBJECTO || d.properties.NAME; }
+
+function render(data, animate) {
+  var cats = [];
+  var seen = {};
+  data.features.forEach(function (d) {
+    var s = featureSubject(d);
+    if (s && !seen[s]) { seen[s] = true; cats.push(s); }
+  });
+  cats.sort();
+  var cmap = {};
+  cats.forEach(function (c, i) { cmap[c] = i / Math.max(1, cats.length - 1); });
+
+  var counts = {};
+  var sel = g.selectAll("path").data(data.features, function (d) {
+    var base = String(featureName(d)) + "|" + String(featureSubject(d));
+    counts[base] = (counts[base] || 0) + 1;
+    return base + "#" + counts[base];
+  });
+  sel.exit().remove();
+  var ent = sel.enter().append("path").style("opacity", 0);
+  var all = ent.merge(sel);
+  all
+    .attr("fill", function (d) {
+      var s = featureSubject(d);
+      return colorFor(s === null || s === undefined ? null : s, s == null ? 0 : (cmap[s] || 0));
+    })
+    .attr("d", pathGen)
+    .on("mousemove", function (d) { showTip(d, event); })
+    .on("mouseleave", hideTip)
+    .on("click", function (d) { showCard(d); event.stopPropagation(); })
+    .classed("hit", false)
+    .classed("dim", false);
+  all.transition().duration(animate ? 450 : 0).style("opacity", 1);
+  applySearch(document.getElementById("search").value.trim());
+}
+
+function showTip(d, ev) {
+  var p = d.properties;
+  var name = p.NAME || "无人认领";
+  var subj = p.SUBJECTO;
+  var html = name;
+  if (subj && subj !== p.NAME) html += " <small>宗主：" + subj + "</small>";
+  if (!p.NAME && !subj) html = "无人认领 / 未定";
+  tipEl.innerHTML = html;
+  tipEl.style.display = "block";
+  var rect = stageEl.getBoundingClientRect();
+  var x = ev.clientX - rect.left + 14;
+  var y = ev.clientY - rect.top + 10;
+  if (x > rect.width - 250) x -= 270;
+  tipEl.style.left = x + "px";
+  tipEl.style.top = y + "px";
+  d3.select(this).raise().classed("hit", true);
+}
+function hideTip() { tipEl.style.display = "none"; d3.selectAll("path.hit").classed("hit", false); }
+
+function showCard(d) {
+  var p = d.properties;
+  var card = document.getElementById("card");
+  document.getElementById("cardName").textContent = p.NAME || "无人认领之地";
+  var lines = [];
+  if (p.SUBJECTO && p.SUBJECTO !== p.NAME) lines.push("<b>宗主/归属：</b>" + p.SUBJECTO);
+  if (p.PARTOF) lines.push("<b>文化圈：</b>" + p.PARTOF);
+  var prec = ["未知", "大致估算", "中等精度", "有条约依据"][p.BORDERPRECISION] || "未知";
+  lines.push("<b>边界可信度：</b>" + prec);
+  lines.push("<b>时间：</b>" + yearLabel(YEARS[curIdx].y));
+  document.getElementById("cardBody").innerHTML = lines.join("<br>");
+  card.style.display = "block";
+}
+function hideCard() { document.getElementById("card").style.display = "none"; }
+
+function applySearch(term) {
+  var t = term.toLowerCase();
+  g.selectAll("path")
+    .classed("dim", function (d) {
+      if (!t) return false;
+      var p = d.properties;
+      var s = ((p.NAME || "") + " " + (p.SUBJECTO || "")).toLowerCase();
+      return s.indexOf(t) === -1;
+    })
+    .classed("hit", function (d) {
+      if (!t) return false;
+      var p = d.properties;
+      var s = ((p.NAME || "") + " " + (p.SUBJECTO || "")).toLowerCase();
+      return s.indexOf(t) >= 0;
+    });
+}
+
+function gotoIdx(i, animate) {
+  i = Math.max(0, Math.min(YEARS.length - 1, i));
+  sliderEl.value = i;
+  var y = YEARS[i].y;
+  document.getElementById("yearBig").textContent = yearLabel(y);
+  document.getElementById("yearNote").textContent = noteFor(y);
+  if (i === curIdx) return;
+  curIdx = i;
+  loadData(YEARS[i].f)
+    .then(function (data) {
+      if (curIdx === i) render(data, animate !== false);
+    })
+    .catch(function () {
+      if (curIdx === i) toast("这一年的地图下载失败（网络波动），点 ⏭⏮ 或稍后再试");
+    });
+}
+
+var playBtn = document.getElementById("playBtn");
+function setPlaying(on) {
+  playing = on;
+  playBtn.textContent = on ? "⏸" : "▶";
+  playBtn.classList.toggle("on", on);
+  clearInterval(timer);
+  if (on) {
+    timer = setInterval(function () {
+      if (curIdx >= YEARS.length - 1) { setPlaying(false); return; }
+      gotoIdx(curIdx + 1);
+    }, 1300);
+  }
+}
+
+document.getElementById("prevBtn").addEventListener("click", function () { gotoIdx(curIdx - 1); });
+document.getElementById("nextBtn").addEventListener("click", function () { gotoIdx(curIdx + 1); });
+playBtn.addEventListener("click", function () { setPlaying(!playing); });
+sliderEl.max = YEARS.length - 1;
+sliderEl.addEventListener("input", function () { gotoIdx(+sliderEl.value); });
+document.getElementById("search").addEventListener("input", function (e) { applySearch(e.target.value.trim()); });
+document.getElementById("projSel").addEventListener("change", function (e) { setProjection(e.target.value); });
+svg.on("click", hideCard);
+document.addEventListener("keydown", function (e) {
+  if (e.key === "ArrowRight") gotoIdx(curIdx + 1);
+  else if (e.key === "ArrowLeft") gotoIdx(curIdx - 1);
+  else if (e.key === " ") { e.preventDefault(); setPlaying(!playing); }
+});
+
+var CHIPS = [-123000, -3000, -500, -1, 100, 800, 1279, 1492, 1783, 1914, 1945, 2010];
+var chipsBox = document.getElementById("chips");
+CHIPS.forEach(function (y) {
+  var idx = YEARS.findIndex(function (o) { return o.y === y; });
+  if (idx < 0) return;
+  var b = document.createElement("button");
+  b.className = "chip";
+  b.textContent = yearLabel(y);
+  b.addEventListener("click", function () { setPlaying(false); gotoIdx(idx); });
+  chipsBox.appendChild(b);
+});
+
+setProjection("airocean");
+gotoIdx(YEARS.findIndex(function (o) { return o.y === 1914; }), false);
+</script>
+</body>
+</html>

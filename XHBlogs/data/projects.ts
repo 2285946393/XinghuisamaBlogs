@@ -219,5 +219,14 @@ export const projectsData: Project[] = [
     "description": "奶油糖果风的挂机弹球：全自动乱飞，波间三选一强化（穿透/分裂/暴击/爆破），看数字自己爆炸。",
     "icon": "🍬",
     "tags": ["游戏", "弹球", "养成"]
+  },
+  {
+    "id": "lab-histmap",
+    "name": "边界千年",
+    "githubUrl": "",
+    "demoUrl": "/lab/histmap/index.html",
+    "description": "从智人走出非洲到 2010 年，54 个历史切片的世界地图册。拖时间轴或按播放键，看帝国像潮水一样漫上来又退下去。数据来自历史边界开源项目（GPL-3.0）。",
+    "icon": "🗺️",
+    "tags": ["科普", "历史", "地图"]
   }
 ];
