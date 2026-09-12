@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>声音的诞生 · 声道合成器 | 有花无实の小站</title>
+<style>
+  :root {
+    --bg: #0b0a12;
+    --ink: #e8e0f0;
+    --sub: #9a8fb0;
+    --accent: #f6a8c8;
+    --line: rgba(246, 168, 200, 0.28);
+    --panel: rgba(20, 17, 32, 0.85);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(900px 520px at 82% -8%, rgba(216, 120, 168, 0.14), transparent 60%),
+      radial-gradient(700px 480px at 4% 100%, rgba(140, 130, 200, 0.12), transparent 60%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  #topbar {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 12px 18px 2px;
+  }
+  #topbar a.back { color: var(--sub); text-decoration: none; font-size: 13px; }
+  #topbar a.back:hover { color: var(--accent); }
+  #topbar h1 { font-size: 18px; font-weight: 600; letter-spacing: 2px; }
+  #topbar h1 em { font-style: normal; color: var(--accent); }
+  #topbar .sub { font-size: 12px; color: var(--sub); }
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 16px;
+    padding: 10px 18px 14px;
+    min-height: 0;
+  }
+  #stage {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    position: relative;
+    min-height: 460px;
+    overflow: hidden;
+  }
+  pink-trombone { position: absolute; inset: 0; }
+  aside { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+  .box h2 { font-size: 14px; letter-spacing: 2px; color: var(--accent); margin-bottom: 10px; }
+  #demos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .demo {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .demo:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .demo:active { transform: translateY(0); }
+  .demo:disabled { opacity: 0.4; cursor: wait; }
+  .legend { font-size: 13px; line-height: 2; color: var(--sub); }
+  .legend b { color: var(--ink); font-weight: 600; }
+  .legend i { font-style: normal; color: var(--accent); }
+  details { font-size: 13px; line-height: 1.8; color: var(--sub); }
+  details summary { cursor: pointer; color: var(--ink); font-size: 14px; letter-spacing: 2px; margin-bottom: 6px; }
+  details p { margin: 6px 0; }
+  #credit { padding: 0 18px 12px; font-size: 11px; color: #5c5470; }
+  #credit a { color: #7a6f95; }
+  #toast {
+    position: fixed;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    color: var(--ink);
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: none;
+    z-index: 20;
+  }
+  @media (max-width: 860px) {
+    main { grid-template-columns: 1fr; }
+    #stage { min-height: 420px; }
+  }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <a class="back" href="/">← 小站</a>
+  <h1>声音的<em>诞生</em> · 声道合成器</h1>
+  <span class="sub">一根物理建模的"人造声带"</span>
+</div>
+
+<main>
+  <section id="stage">
+    <pink-trombone></pink-trombone>
+  </section>
+
+  <aside>
+    <div class="box">
+      <h2>🔊 一键发声</h2>
+      <div id="demos">
+        <button class="demo" data-demo="vowel">啊哦呜元音阶梯</button>
+        <button class="demo" data-demo="ukaton">自我介绍"乌卡通"</button>
+        <button class="demo" data-demo="squeak">小鼠吱吱叫</button>
+        <button class="demo" data-demo="thunder">雷声低吟</button>
+        <button class="demo" data-demo="robot">机器人发声</button>
+        <button class="demo" data-demo="reset">恢复默认嗓音</button>
+      </div>
+    </div>
+
+    <div class="box legend">
+      <h2>👅 怎么拖</h2>
+      <div>
+        <b>舌头</b>：拖画面里那条红色舌头，位置决定音色<br>
+        <b>下巴</b>：右下角滑块，张开嘴<br>
+        <b>喉部软骨</b>：左侧竖滑块，拉长/缩短声道<br>
+        <b>声带</b>：底部横滑块，按住发声，左右挪动会"拐弯"<br>
+        <i>提示</i>：先生效右上角的 start，再玩下面的一键发声
+      </div>
+    </div>
+
+    <div class="box">
+      <details>
+        <summary>📖 它为什么能"说话"</summary>
+        <p>这不是录音，是<b>物理模型</b>：声带被建模成一对振动瓣膜，气流经过时按伯努利原理一开一合；口腔和鼻腔则被切成几十段管子（Kelly-Lochbaum 声道模型），每段宽窄决定哪些频率被放大——这就是元音的"共振峰"。</p>
+        <p>你拖动舌头时，其实是在实时改写这几十段管子的截面。模型和 1960 年代语音学研究用的是同一套物理，所以它真的能"说出" a、u、k、t、n。</p>
+      </details>
+    </div>
+  </aside>
+</main>
+
+<div id="credit">基于 <a href="https://dood.al/pinktrombone/" target="_blank" rel="noopener">Pink Trombone</a>（Neil Thapen 原作 / <a href="https://github.com/zakaton/Pink-Trombone" target="_blank" rel="noopener">zakaton 可编程移植</a>，GPL-3.0，见 <a href="./LICENSE">LICENSE</a>）· 魔改：中文界面 + 一键发声</div>
+<div id="toast"></div>
+
+<script src="./pink-trombone.min.js" type="module"></script>
+<script>
+(function () {
+  var ptEl = document.querySelector("pink-trombone");
+  var ready = false;
+  var busy = false;
+
+  function toast(msg, ms) {
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    clearTimeout(t._tm);
+    t._tm = setTimeout(function () { t.style.display = "none"; }, ms || 2400);
+  }
+
+  ptEl.addEventListener("load", function () {
+    ptEl.setAudioContext().then(function () {
+      ptEl.enableUI();
+      ptEl.startUI();
+      ptEl.connect(ptEl.audioContext.destination);
+      ready = true;
+      localizeUI();
+      ptEl.audioContext.addEventListener("statechange", function () {
+        if (ptEl.audioContext.state === "running") toast("声带上线，开玩", 1500);
+      });
+    }).catch(function (e) {
+      toast("这个浏览器不支持 Web Audio Worklet（试试新版 Edge/Chrome）");
+    });
+  });
+
+  function localizeUI() {
+    var map = { start: "开始发声", wobble: "关闭颤音", voice: "关闭清音" };
+    Object.keys(map).forEach(function (id) {
+      var b = document.getElementById(id);
+      if (!b) return;
+      b.textContent = map[id];
+      b.style.backgroundColor = "rgba(246,168,200,0.15)";
+      b.style.borderColor = "rgba(246,168,200,0.6)";
+      b.style.color = "#e8e0f0";
+      b.style.cursor = "pointer";
+      if (id !== "start") {
+        b.addEventListener("click", function () {
+          setTimeout(function () {
+            b.textContent = (b.value === "true" ? map[id] : id === "wobble" ? "开启颤音" : "开启清音");
+          }, 0);
+        });
+      }
+    });
+  }
+
+  var ctx = function () { return ptEl.audioContext; };
+
+  function ramp(param, value, dur) {
+    param.linearRampToValueAtTime(value, ctx().currentTime + dur);
+  }
+
+  function wait(sec) {
+    return new Promise(function (res) { setTimeout(res, sec * 1000); });
+  }
+
+  function say(step) {
+    var dur = step.dur || 0.15;
+    var p = ptEl.parameters;
+    var c = ptEl.constrictions[0];
+    if (!c) { c = ptEl.newConstriction(40, 3); }
+    if (step.tongue) {
+      if (step.tongue.i != null) ramp(p.tongue.index, step.tongue.i, dur);
+      if (step.tongue.d != null) ramp(p.tongue.diameter, step.tongue.d, dur);
+    }
+    if (step.con) {
+      if (step.con.i != null) ramp(c.index, step.con.i, dur);
+      if (step.con.d != null) ramp(c.diameter, step.con.d, dur);
+    }
+    if (step.intensity != null) ramp(p.intensity, step.intensity, dur);
+    if (step.tenseness != null) ramp(p.tenseness, 1 - Math.cos(step.tenseness * Math.PI * 0.5), dur);
+    if (step.frequency != null) ramp(p.frequency, step.frequency, dur);
+    if (step.noise != null) ramp(p.noise, step.noise, dur);
+    if (step.tractLength != null) ramp(p.tractLength, step.tractLength, dur);
+    if (step.wobble != null) ramp(p.vibrato.wobble, step.wobble, dur);
+    return wait(dur + (step.hold || 0));
+  }
+
+  var BASE = 140;
+
+  var SEQ = {
+    vowel: [
+      { tongue: { i: 17, d: 3 }, con: { i: 25, d: 4 }, intensity: 1, tenseness: 0.8, frequency: BASE, hold: 0.25 },
+      { tongue: { i: 27.5, d: 2 }, con: { d: 3 }, intensity: 1, tenseness: 0.7, frequency: BASE, hold: 0.25 },
+      { tongue: { i: 12.6, d: 2.3 }, con: { d: 3 }, intensity: 1, tenseness: 0.7, frequency: BASE },
+      { tongue: { i: 22.6, d: 2 }, con: { i: 40, d: 0.8 }, intensity: 1, tenseness: 0.7, frequency: BASE, hold: 0.3 },
+      { intensity: 0 }
+    ],
+    ukaton: [
+      { tongue: { i: 22.6, d: 2 }, con: { i: 40, d: 0.8 }, intensity: 1, tenseness: 0.8, frequency: BASE * 1.12 },
+      { tongue: { i: 17, d: 3 }, con: { i: 25, d: 4 }, intensity: 1, tenseness: 0.8, frequency: BASE * 1.09, hold: 0.08 },
+      { con: { i: 20, d: -0.3 }, intensity: 0, tenseness: 0 },
+      { tongue: { i: 17, d: 3 }, con: { i: 25, d: 4 }, intensity: 1, tenseness: 0.9, frequency: BASE, hold: 0.08 },
+      { con: { i: 36, d: -0.5 }, intensity: 0, tenseness: 1 },
+      { tongue: { i: 12.6, d: 2.3 }, con: { d: 3 }, intensity: 1, tenseness: 0.8, frequency: BASE * 0.94, hold: 0.1 },
+      { con: { i: 36, d: -1.4 }, intensity: 0.25, frequency: BASE, hold: 0.25 },
+      { intensity: 0 }
+    ],
+    squeak: [
+      { frequency: 420, tractLength: 0.65, intensity: 1, tenseness: 0.9, tongue: { i: 24, d: 2 }, hold: 0.28 },
+      { frequency: 520, hold: 0.22 },
+      { frequency: 380, hold: 0.3 },
+      { intensity: 0, tractLength: 1, frequency: BASE }
+    ],
+    thunder: [
+      { frequency: 62, noise: 0.5, tenseness: 0.15, intensity: 1, tongue: { i: 12, d: 1.5 }, tractLength: 1.15, hold: 0.9 },
+      { frequency: 55, intensity: 0.7, hold: 0.8 },
+      { intensity: 0, noise: 0, tractLength: 1, frequency: BASE }
+    ],
+    robot: [
+      { wobble: 0, tenseness: 1, intensity: 1 },
+      { tongue: { i: 17, d: 3 }, con: { i: 25, d: 4 }, frequency: BASE, hold: 0.18 },
+      { tongue: { i: 22.6, d: 2 }, con: { i: 40, d: 0.8 }, frequency: BASE * 1.06, hold: 0.18 },
+      { tongue: { i: 27.5, d: 2 }, con: { d: 3 }, frequency: BASE * 0.92, hold: 0.18 },
+      { tongue: { i: 12.6, d: 2.3 }, frequency: BASE * 1.12, hold: 0.18 },
+      { con: { i: 36, d: -1.4 }, intensity: 0.3, hold: 0.22 },
+      { intensity: 0 }
+    ],
+    reset: [
+      { tongue: { i: 25, d: 1.5 }, con: { i: 40, d: 1.5 }, intensity: 0, tenseness: 0.5, frequency: BASE, noise: 0, tractLength: 1, wobble: 1 }
+    ]
+  };
+
+  function runSeq(name) {
+    if (!ready) { toast("先点一下页面任意处 / 开始发声按钮"); return; }
+    if (busy) return;
+    if (ctx().state !== "running") {
+      ctx().resume();
+      if (ptEl.pinkTrombone) ptEl.pinkTrombone.start();
+    }
+    busy = true;
+    var btns = document.querySelectorAll(".demo");
+    for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+    var seq = SEQ[name];
+    var chain = Promise.resolve();
+    seq.forEach(function (step) {
+      chain = chain.then(function () { return say(step); });
+    });
+    chain.then(function () {
+      busy = false;
+      for (var i = 0; i < btns.length; i++) btns[i].disabled = false;
+    });
+  }
+
+  document.getElementById("demos").addEventListener("click", function (e) {
+    var b = e.target.closest(".demo");
+    if (b) runSeq(b.getAttribute("data-demo"));
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.code === "Space") {
+      e.preventDefault();
+      var b = document.activeElement;
+      if (!b || !b.classList || !b.classList.contains("demo")) {
+        runSeq(document.activeElement === document.body ? "vowel" : "reset");
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>

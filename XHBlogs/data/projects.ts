@@ -228,5 +228,14 @@ export const projectsData: Project[] = [
     "description": "从智人走出非洲到 2010 年，54 个历史切片的世界地图册。拖时间轴或按播放键，看帝国像潮水一样漫上来又退下去。数据来自历史边界开源项目（GPL-3.0）。",
     "icon": "🗺️",
     "tags": ["科普", "历史", "地图"]
+  },
+  {
+    "id": "lab-trombone",
+    "name": "声音的诞生",
+    "githubUrl": "",
+    "demoUrl": "/lab/trombone/index.html",
+    "description": "一根物理建模的人造声带：拖舌头、按声带，Kelly-Lochbaum 声道模型实时发声，真的能说出 a-u-k-t-n。基于 Pink Trombone（GPL-3.0）魔改，附中文界面与一键发声。",
+    "icon": "🗣️",
+    "tags": ["科普", "音频", "物理建模"]
   }
 ];
