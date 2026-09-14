@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 
 // 引入前台客户端组件
 import CreativeWorkshopClient from './CreativeWorkshopClient';
+import { siteConfig } from '../../siteConfig';
 
 function getLocalItems(directoryName: string, typeName: string) {
   const dirPath = path.join(process.cwd(), directoryName);
@@ -39,9 +40,11 @@ function getLocalItems(directoryName: string, typeName: string) {
 }
 
 export default function CreativeWorkshopPage() {
+  // 内容可见性开关：隐藏的板块不参与灵境成就/经验统计
+  const vis = (siteConfig as any).contentVisibility || {};
   const posts = getLocalItems('posts', 'post');
-  const chatters = getLocalItems('chatters', 'chatter');
-  const moments = getLocalItems('moments', 'moment');
+  const chatters = vis.chatters === false ? [] : getLocalItems('chatters', 'chatter');
+  const moments = vis.moments === false ? [] : getLocalItems('moments', 'moment');
 
   return (
     <CreativeWorkshopClient

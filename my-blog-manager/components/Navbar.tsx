@@ -53,21 +53,25 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // 🌟 这里新增了 /tree 路由
+  // 🌟 这里新增了 /tree 路由；同时响应内容可见性开关（写作控制台同样隐藏对应板块入口）
   const navLinks = [
     { name: '首页', href: '/' },
     { name: '项目', href: '/projects' },
     { name: '归档', href: '/timeline' },
-    { name: '照片墙', href: '/photowall' },
+    { name: '照片墙', href: '/photowall', visKey: 'photoWall' },
     { name: '音乐', href: '/music' },
-    { name: '说说', href: '/moments' },
-    { name: '杂谈', href: '/chatter' },
-    { name: '🌳 灵境', href: '/tree' }, // <--- 新增的入口在这里喵！
+    { name: '说说', href: '/moments', visKey: 'moments' },
+    { name: '杂谈', href: '/chatter', visKey: 'chatters' },
+    { name: '🌳 灵境', href: '/tree' },
     { name: '📝 草稿箱', href: '/drafts' },
     { name: '友链', href: '/friends' },
     { name: '关于', href: '/about' },
     { name: '⚙️ 设置', href: '/settings' },
-  ];
+  ].filter(link => {
+    if (!link.visKey) return true;
+    const vis = (siteConfig as any).contentVisibility as Record<string, boolean> | undefined;
+    return vis ? vis[link.visKey] !== false : true;
+  });
 
   const handleMinimize = () => {
     if (typeof window !== 'undefined' && (window as any).pywebview?.api) {

@@ -194,8 +194,9 @@ export default function AlchemyLab({ posts = [], chatters = [], moments = [] }: 
   const rpgStats = useMemo(() => {
     if (siteConfig?.enableLevelSystem !== true) return null;
 
-    // 统计照片与友链 (纯发徽章，不加经验)
-    const totalPhotos = (albums || []).reduce((acc: number, curr: any) => acc + (curr.photos?.length || 0), 0);
+    // 统计照片与友链 (纯发徽章，不加经验)；照片墙隐藏时计 0
+    const photoWallHidden = (siteConfig as any)?.contentVisibility?.photoWall === false;
+    const totalPhotos = photoWallHidden ? 0 : (albums || []).reduce((acc: number, curr: any) => acc + (curr.photos?.length || 0), 0);
     const totalFriends = (friendsData || []).length;
 
     const parseDateStr = (dateVal: any) => {

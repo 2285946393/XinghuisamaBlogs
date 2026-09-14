@@ -17,6 +17,7 @@ import { ToastProvider } from '../components/ToastProvider';
 
 import LatestPostsCarousel from '../components/LatestPostsCarousel';
 import LatestChatterCarousel from '../components/LatestChatterCarousel';
+import LatestMomentsCard from '../components/LatestMomentsCard';
 import DanmakuBackground from '../components/DanmakuBackground';
 
 function formatUpdateTime(dateString: string) {
@@ -88,6 +89,14 @@ export default function Home() {
   const realPhotoCount = albums.reduce((total, album) => total + album.photos.length, 0);
   const latestAlbum = albums.length > 0 ? albums[0] : { id: '', title: '照片墙', description: '查看摄影', cover: siteConfig.photoWallImage, date: '' };
 
+  const vis = siteConfig.contentVisibility || {};
+  const showPhotoWall = vis.photoWall !== false;
+  const showMoments = vis.moments !== false;
+  const showChatters = vis.chatters !== false;
+
+  const fallbackChatters = [{ slug: 'none', title: '暂无记录', description: '记录一段思绪...', cover: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop', date: '', formattedDate: '' }];
+  const displayChatters = showChatters ? (top5Chatters.length > 0 ? top5Chatters : fallbackChatters) : [];
+
   return (
     <ToastProvider>
       <div className="min-h-screen relative pb-10">
@@ -103,7 +112,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
                 {/* 手机上占满1列，电脑上占7列 */}
                 <div className="col-span-1 lg:col-span-7 flex flex-col">
-                    <ProfileCard postCount={allPosts.length} chatterCount={chatterCount} photoCount={realPhotoCount}/>
+                    <ProfileCard postCount={allPosts.length} chatterCount={showChatters ? chatterCount : 0} photoCount={showPhotoWall ? realPhotoCount : 0}/>
                 </div>
                 {/* 手机上占满1列，电脑上占5列 */}
                 <div className="col-span-1 lg:col-span-5 flex flex-col">
@@ -125,7 +134,8 @@ export default function Home() {
                 {/* 右侧：组合面板 (电脑端占8列) */}
                 <div className="col-span-1 lg:col-span-8 flex flex-col gap-6">
 
-                  {/* 照片墙大海报 */}
+                  {/* 照片墙大海报 (受内容可见性开关控制) */}
+                  {showPhotoWall && (
                   <Link href="/photowall" className="w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0">
                     <img src={latestAlbum.cover} className="w-full h-full absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105 opacity-90"/>
                     <div className="absolute inset-0 bg-black/30 dark:bg-black/50 group-hover:bg-black/10 transition-colors duration-500"></div>
@@ -134,12 +144,14 @@ export default function Home() {
                       <p className="text-white/90 text-sm sm:text-lg line-clamp-1">{latestAlbum.description}</p>
                     </div>
                   </Link>
+                  )}
 
                   {/* 底层网格：说说轮播 + 主题切换器 */}
                   {/* 手机上单列，平板上分3列比例分布 */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1">
-                    <div className="sm:col-span-2 flex flex-col min-h-[200px]">
-                      <LatestChatterCarousel chatters={top5Chatters} />
+                    <div className={`sm:col-span-2 flex flex-col min-h-[200px] ${(!showChatters && !showMoments) ? 'hidden' : ''}`}>
+                      {showChatters && <LatestChatterCarousel chatters={top5Chatters.length > 0 ? top5Chatters : [{ slug: 'none', title: '暂无记录', description: '记录一段思绪...', cover: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop', date: '', formattedDate: '' }]} />}
+                      {!showChatters && showMoments && <LatestMomentsCard />}
                     </div>
                     <div className="sm:col-span-1 flex flex-col min-h-[120px]">
                       <ThemeToggleBlock />

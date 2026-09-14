@@ -72,14 +72,18 @@ export default function Navbar() {
     { name: '首页', href: '/' },
     { name: '项目', href: '/projects' },
     { name: '归档', href: '/timeline' },
-    { name: '照片墙', href: '/photowall' },
+    { name: '照片墙', href: '/photowall', visKey: 'photoWall' },
     { name: '音乐', href: '/music' },
     { name: '灵境', href: '/tree' },
-    { name: '说说', href: '/moments' },
-    { name: '杂谈', href: '/chatter' },
+    { name: '说说', href: '/moments', visKey: 'moments' },
+    { name: '杂谈', href: '/chatter', visKey: 'chatters' },
     { name: '友链', href: '/friends' },
     { name: '关于', href: '/about' },
-  ];
+  ].filter(link => {
+    if (!link.visKey) return true;
+    const vis = siteConfig.contentVisibility as Record<string, boolean> | undefined;
+    return vis ? vis[link.visKey] !== false : true;
+  });
 
   // 🌟 核心：过滤掉“灵境”，专供手机端使用，保证圆盘自动重新均匀排布
   const mobileNavLinks = navLinks.filter(link => link.href !== '/tree');

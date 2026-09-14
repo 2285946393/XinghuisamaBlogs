@@ -13,6 +13,19 @@ export const metadata = {
 };
 
 export default function ChatterPage() {
+  // 内容可见性开关：关闭时本页对外隐藏（返回 404）
+  if (siteConfig.contentVisibility?.chatters === false) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🫧</div>
+          <p className="text-lg font-black text-slate-500 dark:text-slate-400">这个板块被站长藏起来了</p>
+          <p className="text-xs text-slate-400 mt-2">404 · Not Found</p>
+        </div>
+      </div>
+    );
+  }
+
   // 注意：这里我们假设你的 md 文件放在根目录的 chatters 文件夹里
   const chattersDirectory = path.join(process.cwd(), 'chatters');
   let chatters: Chatter[] = [];

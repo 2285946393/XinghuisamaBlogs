@@ -58,7 +58,7 @@ def get_site_config():
         root_content = content
 
         # 1. 🌟 预先提取并隔离所有已知的“嵌套对象”，防止内部属性泄露到外层！
-        known_dicts = ['social', 'gitalkConfig', 'geminiConfig', 'icpConfig']
+        known_dicts = ['social', 'gitalkConfig', 'geminiConfig', 'icpConfig', 'contentVisibility']
         for dict_name in known_dicts:
             dict_match = re.search(rf'{dict_name}\s*:\s*\{{([\s\S]+?)\}}', content)
             if dict_match:
@@ -71,6 +71,12 @@ def get_site_config():
                 for m in re.finditer(r'([a-zA-Z0-9_]+)\s*:\s*(["\'])([\s\S]*?)\2', dict_str):
                     # 将转义的 \\n 恢复为真实的换行，供前端显示
                     sub_dict[m.group(1)] = m.group(3).replace('\\n', '\n')
+
+                # 🌟 contentVisibility 特供处理：内部的 true/false 布尔值也要吃进来
+                # 注意键名可能带双引号（POST 写入用 json.dumps，键是带引号的），正则要允许前后可选引号
+                if dict_name == 'contentVisibility':
+                    for bm in re.finditer(r'"?([a-zA-Z0-9_]+)"?\s*:\s*(true|false)', dict_str):
+                        sub_dict[bm.group(1)] = bm.group(2) == 'true'
 
                 # Gitalk 的管理员数组特供处理
                 if dict_name == 'gitalkConfig':
@@ -128,7 +134,8 @@ def update_site_config(payload: Dict[str, Any] = Body(...)):
         "navSuffix",
         "navAfter",
         "friendLinkApplyFormat",
-        "enableLevelSystem" # 👈 你加的字段在这里，完美！
+        "enableLevelSystem",
+        "contentVisibility" # 👈 内容可见性开关（照片墙/说说/杂谈）
     }
 
     try:

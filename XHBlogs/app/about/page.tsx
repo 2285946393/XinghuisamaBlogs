@@ -18,6 +18,7 @@ import 'katex/dist/katex.min.css';
 import Navbar from '../../components/Navbar';
 import PageTransition from '../../components/PageTransition';
 import AboutClient from '../../components/AboutClient';
+import { siteConfig } from '../../siteConfig';
 import { Suspense } from 'react';
 
 function getDirActivities(dirName: string, typeLabel: '文章' | '杂谈' | '说说', linkPrefix: string) {
@@ -92,8 +93,8 @@ export default async function AboutPage() {
   }
 
   const posts = getDirActivities('posts', '文章', 'posts');
-  const chatters = getDirActivities('chatters', '杂谈', 'chatter');
-  const moments = getDirActivities('moments', '说说', 'moments');
+  const chatters = (siteConfig.contentVisibility?.chatters === false) ? [] : getDirActivities('chatters', '杂谈', 'chatter');
+  const moments = (siteConfig.contentVisibility?.moments === false) ? [] : getDirActivities('moments', '说说', 'moments');
 
   const allActivities = [...posts, ...chatters, ...moments].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();

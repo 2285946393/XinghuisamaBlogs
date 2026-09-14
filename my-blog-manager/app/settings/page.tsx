@@ -17,8 +17,8 @@ import DisplaySection from '../../components/settings/DisplaySection';
 import CommentSection from '../../components/settings/CommentSection';
 import DanmakuSection from '../../components/settings/DanmakuSection';
 import FooterSection from '../../components/settings/FooterSection';
-// 👇 🌟 引入刚写的 AI 配置组件
 import AICatSection from '../../components/settings/AICatSection';
+import VisibilitySection from '../../components/settings/VisibilitySection';
 
 function SettingsContent() {
   const { operations, addOperation } = useOperations();
@@ -50,7 +50,9 @@ function SettingsContent() {
       systemPrompt: '',
       maxOutputTokens: 150,
       temperature: 0.85
-    }
+    },
+    // 👇 🌟 内容可见性开关（照片墙/说说/杂谈）
+    contentVisibility: (siteConfig as any).contentVisibility || { photoWall: true, moments: true, chatters: true }
   });
 
   const [queryLoading, setQueryLoading] = useState(false);
@@ -77,6 +79,10 @@ function SettingsContent() {
             buildDate: data.data.buildDate || prev.buildDate,
             icpConfig: data.data.icpConfig || prev.icpConfig,
             footerBadges: data.data.footerBadges ? [...data.data.footerBadges] : prev.footerBadges,
+            // 👇 🌟 合并后端发来的内容可见性配置
+            contentVisibility: data.data.contentVisibility
+              ? { ...(prev.contentVisibility || {}), ...data.data.contentVisibility }
+              : prev.contentVisibility,
             // 👇 🌟 合并后端发来的小猫配置
             geminiConfig: { ...(prev.geminiConfig || {}), ...(data.data.geminiConfig || {}) }
           }));
@@ -191,10 +197,11 @@ function SettingsContent() {
     { id: 'background', name: '视觉背景配置', icon: '🌌' },
     { id: 'music', name: '音乐播放设置', icon: '🎵' },
     { id: 'gallery', name: '图库配置管理', icon: '🖼️' },
+    { id: 'visibility', name: '内容可见性', icon: '🎭' },
     { id: 'footer', name: '首页底部设置', icon: '🧩' },
     { id: 'danmaku', name: '全站弹幕设置', icon: '⚡' },
     { id: 'comment', name: '评论系统配置', icon: '💬' },
-    { id: 'aicat', name: 'AI 煤球配置', icon: '🐾' }, // 👈 新增的小猫设置
+    { id: 'aicat', name: 'AI 煤球配置', icon: '🐾' },
     { id: 'repo', name: '项目仓库设置', icon: '🚀' },
   ];
 
@@ -231,6 +238,7 @@ function SettingsContent() {
               {activeTab === 'background' && <BackgroundSection key="background" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} />}
               {activeTab === 'music' && <MusicSection key="music" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} musicDetails={musicDetails} queryMusic={queryMusic} queryLoading={queryLoading} queryResult={queryResult} confirmAddMusic={confirmAddMusic} removeSong={removeSong} />}
               {activeTab === 'gallery' && <GallerySection key="gallery" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} />}
+              {activeTab === 'visibility' && <VisibilitySection key="visibility" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} />}
               {activeTab === 'footer' && <FooterSection key="footer" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} />}
               {activeTab === 'danmaku' && <DanmakuSection key="danmaku" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} />}
               {activeTab === 'comment' && <CommentSection key="comment" formData={formData} handleUpdate={handleUpdate} pushToQueue={pushToQueue} />}

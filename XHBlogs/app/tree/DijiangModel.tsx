@@ -338,7 +338,9 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
   const rpgStats = useMemo(() => {
     if (siteConfig?.enableLevelSystem !== true) return null;
 
-    const totalPhotos = (albums || []).reduce((acc: number, curr: any) => acc + (curr.photos?.length || 0), 0);
+    // 照片墙隐藏时照片数计 0（防止成就泄露板块存在）
+    const photoWallHidden = (siteConfig as any)?.contentVisibility?.photoWall === false;
+    const totalPhotos = photoWallHidden ? 0 : (albums || []).reduce((acc: number, curr: any) => acc + (curr.photos?.length || 0), 0);
     const totalFriends = (friendsData || []).length;
 
     const parseDateStr = (dateVal: any) => {

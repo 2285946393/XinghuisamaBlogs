@@ -49,6 +49,10 @@ export const siteConfig = {
   chatterDescription: "单文件小玩具与消逝日常的碎片记录",
 
 
+  // 6. 内容可见性开关（面试/外发场景可一键隐藏"不务正业"板块）
+  // 关掉后：导航栏、首页海报、对应页面(404)、关于页活动流、灵境成就全部同步隐藏
+  contentVisibility: {"photoWall": true, "moments": true, "chatters": true},
+
   // 👇 【新增】：全局背景弹幕配置
   danmakuList: ["单文件，双击就跑", "深渊塔第 15 层见", "极光流体跑起来了吗", "今天十连金光了", "在爬塔，勿念", "报刊亭还有人看吗", "鲸鱼娘正在干饭", "再抽一发就睡觉", "小鲸鱼岛等风也等你", "零安装零依赖", "有花", "无实"],
   gitalkConfig: {
