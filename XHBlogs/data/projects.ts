@@ -237,5 +237,68 @@ export const projectsData: Project[] = [
     "description": "一根物理建模的人造声带：拖舌头、按声带，Kelly-Lochbaum 声道模型实时发声，真的能说出 a-u-k-t-n。基于 Pink Trombone（GPL-3.0）魔改，附中文界面与一键发声。",
     "icon": "🗣️",
     "tags": ["科普", "音频", "物理建模"]
+  },
+  {
+    "id": "lab-mycelia",
+    "name": "菌丝世界",
+    "githubUrl": "",
+    "demoUrl": "/lab/mycelia.html",
+    "description": "Physarum 黏菌的菌丝网络：粒子释放信息素、感知浓度转向，网络像生命一样自己长出来。",
+    "icon": "🍄",
+    "tags": ["可视化", "生物", "粒子"]
+  },
+  {
+    "id": "lab-particle-life",
+    "name": "粒子生命",
+    "githubUrl": "",
+    "demoUrl": "/lab/particle-life.html",
+    "description": "多物种吸引/排斥矩阵驱动的粒子生态：改一格矩阵，整个物种关系重新洗牌。",
+    "icon": "🧬",
+    "tags": ["可视化", "粒子", "模拟"]
+  },
+  {
+    "id": "lab-gravity-sandbox",
+    "name": "引力沙盒",
+    "githubUrl": "",
+    "demoUrl": "/lab/gravity-sandbox.html",
+    "description": "N-body 引力沙盒：拖拽扔出天体，看黑洞吞并行星、轨道纠缠成一团星云。",
+    "icon": "🪐",
+    "tags": ["可视化", "物理", "模拟"]
+  },
+  {
+    "id": "lab-reaction-diffusion",
+    "name": "反应扩散",
+    "githubUrl": "",
+    "demoUrl": "/lab/reaction-diffusion.html",
+    "description": "Gray-Scott 反应扩散：鼠标作画播种，珊瑚、迷宫、斑点从化学方程里自己长出来。",
+    "icon": "🧪",
+    "tags": ["可视化", "化学", "模拟"]
+  },
+  {
+    "id": "lab-creator-portrait",
+    "name": "创作者画像",
+    "githubUrl": "",
+    "demoUrl": "/lab/creator-portrait.html",
+    "description": "我的创作者画像：一页看完我是谁、在做什么、喜欢什么。",
+    "icon": "🖼️",
+    "tags": ["企划", "个人"]
+  },
+  {
+    "id": "lab-fluid-garden",
+    "name": "流体花园",
+    "githubUrl": "",
+    "demoUrl": "/lab/fluid-garden.html",
+    "description": "指尖搅动的流体花园，色彩随你的笔触缓缓晕开、缠绕、生根。",
+    "icon": "🌸",
+    "tags": ["可视化", "流体", "交互"]
+  },
+  {
+    "id": "lab-candy-jar",
+    "name": "糖果果冻培育罐",
+    "githubUrl": "",
+    "demoUrl": "/lab/candy-jar.html",
+    "description": "一罐会自己长大的糖果果冻：投喂、培育、看它膨胀得越来越诱人。",
+    "icon": "🍮",
+    "tags": ["可爱", "养成", "治愈"]
   }
 ];
