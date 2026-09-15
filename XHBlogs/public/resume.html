@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>简历 · 有花无实</title>
+<style>
+:root{
+  --ink:#23202b; --sub:#5c5666; --mist:#8b8496; --line:#e6e2e8;
+  --accent:#b5486c; --accent-soft:#f7e9ee;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#ececef;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+.page{
+  width:210mm;min-height:297mm;margin:16px auto;background:#fff;
+  padding:15mm 16mm;box-shadow:0 8px 30px rgba(0,0,0,.12);
+}
+
+/* ---------- 头部 ---------- */
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.hd .name{font-size:27px;font-weight:800;letter-spacing:.03em}
+.hd .role{margin-top:5px;font-size:13.5px;color:var(--accent);font-weight:700}
+.hd .meta{text-align:right;font-size:12.5px;color:var(--sub);line-height:1.75}
+.hd .meta b{color:var(--ink);font-weight:600}
+
+/* ---------- 区块 ---------- */
+.sec{margin-top:16px}
+.sec h2{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:.06em;display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.sec h2::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--accent)}
+.sec h2 .en{font-size:10.5px;font-weight:600;color:var(--mist);letter-spacing:.14em;text-transform:uppercase}
+
+/* ---------- 项目 ---------- */
+.item{margin-bottom:11px;break-inside:avoid}
+.item .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.item .t{font-size:13.5px;font-weight:700}
+.item .t .tag{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:1px 8px;border-radius:999px;margin-left:8px}
+.item .date{font-size:11.5px;color:var(--mist);white-space:nowrap}
+.item .stack{font-size:11.5px;color:var(--accent);font-weight:600;margin-top:1px}
+.item ul{margin:4px 0 0 16px}
+.item li{font-size:12.5px;color:var(--sub);margin-top:2px}
+.item li b{color:var(--ink);font-weight:600}
+
+/* ---------- 技能 ---------- */
+.skill{display:grid;grid-template-columns:74px 1fr;gap:6px 12px;font-size:12.5px}
+.skill dt{font-weight:700;color:var(--ink)}
+.skill dd{color:var(--sub)}
+.skill dd b{color:var(--ink);font-weight:600}
+
+/* ---------- 教育 ---------- */
+.edu .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.edu .t{font-size:13.5px;font-weight:700}
+.edu .date{font-size:11.5px;color:var(--mist)}
+.edu p{font-size:12.5px;color:var(--sub);margin-top:3px}
+
+.tip{margin:10px 0 0;font-size:11.5px;color:var(--mist);background:var(--accent-soft);border-radius:8px;padding:7px 11px}
+.tip b{color:var(--accent)}
+
+@media print{
+  body{background:#fff}
+  .page{margin:0;box-shadow:none;width:auto;min-height:auto;padding:12mm 14mm}
+  .tip{display:none}
+  @page{size:A4;margin:0}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hd">
+    <div>
+      <div class="name">【姓名，请填写】</div>
+      <div class="role">求职意向：前端开发（校招 / 实习）</div>
+    </div>
+    <div class="meta">
+      <div>📱 <b>【手机号，请填写】</b></div>
+      <div>📮 2285946393@qq.com</div>
+      <div>🔗 ephemeralbloom.dpdns.org</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>教育背景<span class="en">Education</span></h2>
+    <div class="edu">
+      <div class="top">
+        <div class="t">【学校名称，请填写】 · 电气与信息工程（本科）</div>
+        <div class="date">2023.09 – 2027.06</div>
+      </div>
+      <p>在校期间自学前端与图形编程，独立完成并上线 28 个 Web 作品，涵盖图形渲染、游戏开发、交互可视化与教育工具。</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>项目经历<span class="en">Projects</span></h2>
+
+    <div class="item">
+      <div class="top">
+        <div class="t">极光流体 <span class="tag">WebGL</span></div>
+        <div class="date">2026.08 · 个人项目</div>
+      </div>
+      <div class="stack">WebGL · GLSL · JavaScript</div>
+      <ul>
+        <li>手写 GLSL 实现实时流体求解（速度场 / 染料注入），<b>零第三方库</b>，单文件 23KB</li>
+        <li>鼠标交互驱动整个模拟，稳定 60fps，作品展馆「镇馆之宝」</li>
+      </ul>
+    </div>
+
+    <div class="item">
+      <div class="top">
+        <div class="t">元素秘境 <span class="tag">Rust + WASM</span></div>
+        <div class="date">2026.09 · 个人项目</div>
+      </div>
+      <div class="stack">Rust · WebAssembly · Canvas</div>
+      <ul>
+        <li>用 <b>Rust 编写落沙物理内核并编译为 WebAssembly</b>，76KB 单文件，帧率显著优于纯 JS 实现</li>
+        <li>实现流沙、狱炎、复制魔印等 10+ 种元素交互规则</li>
+      </ul>
+    </div>
+
+    <div class="item">
+      <div class="top">
+        <div class="t">深渊塔 <span class="tag">游戏</span></div>
+        <div class="date">2026.08 · 个人项目</div>
+      </div>
+      <div class="stack">JavaScript · 状态机 · 数值设计</div>
+      <ul>
+        <li>15 层爬塔 roguelike：<b>策略战斗 + 随机事件分支 + 双结局</b>，背景随下潜深度渐变</li>
+        <li>自研战斗状态机与数值系统，支持进度存档</li>
+      </ul>
+    </div>
+
+    <div class="item">
+      <div class="top">
+        <div class="t">人生重开 <span class="tag">数据驱动</span></div>
+        <div class="date">2026.07 · 个人项目</div>
+      </div>
+      <div class="stack">JavaScript · 数据驱动 · 状态管理</div>
+      <ul>
+        <li>文字人生模拟：<b>184 个天赋、1720 个事件</b>，抽天赋 / 分属性 / 逐年事件流</li>
+        <li>设计事件权重与属性影响模型，保证每局结果不重复</li>
+      </ul>
+    </div>
+
+    <div class="item">
+      <div class="top">
+        <div class="t">通信调制实验室 <span class="tag">可视化</span></div>
+        <div class="date">2026.06 · 个人项目</div>
+      </div>
+      <div class="stack">Canvas 2D · 信号处理 · 交互可视化</div>
+      <ul>
+        <li>把 AM / FM 调制解调变成<b>看得见、可实时调参</b>的波形实验</li>
+        <li>将专业课知识转化为直观的教学工具</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="sec">
+    <h2>技能栈<span class="en">Skills</span></h2>
+    <dl class="skill">
+      <dt>前端</dt><dd>HTML5 / CSS3、<b>JavaScript (ES6+)</b>、响应式布局、Canvas 2D、Web Audio API</dd>
+      <dt>图形</dt><dd><b>WebGL</b>、<b>GLSL 着色器</b>、粒子与流体模拟、实时渲染</dd>
+      <dt>工程</dt><dd>Rust → WebAssembly、Next.js / React、Tailwind CSS、Git</dd>
+      <dt>其他</dt><dd>Python（基础）；能独立完成从设计、编码到部署的全流程</dd>
+    </dl>
+  </div>
+
+  <div class="sec">
+    <h2>个人亮点<span class="en">Highlights</span></h2>
+    <div class="item">
+      <ul>
+        <li><b>极强的自驱与完成度</b>：独立设计并上线 <b>28 个单文件 Web 作品</b>，全部零安装、零依赖、双击即玩</li>
+        <li><b>作品在线可验证</b>：全部部署于个人站点 ephemeralbloom.dpdns.org，面试可当场试玩</li>
+        <li><b>跨领域落地能力</b>：把专业课（通信）与兴趣（图形 / 游戏）都做成了可交互的成品</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">💡 占位符（【】内）填完即可 <b>Ctrl+P / ⌘P → 另存为 PDF</b> 投递。想加实习经历、奖项或课程成绩，告诉我我帮你补。</div>
+
+</div>
+</body>
+</html>
