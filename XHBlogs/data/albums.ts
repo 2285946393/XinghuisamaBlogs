@@ -5,7 +5,7 @@ export interface Album { id: string; title: string; description: string; cover: 
 export const albums: Album[] = [
   {
     "id": "twelve-worlds",
-    "title": "十二个小世界",
+    "title": "一花一世界",
     "description": "作品展馆里的单文件小玩具们（截图存档）",
     "cover": "/album/private-4a.jpg",
     "date": "2026.09",
