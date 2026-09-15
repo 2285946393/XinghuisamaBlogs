@@ -22,7 +22,7 @@ export const siteConfig = {
   useGradient: false,
   themeColors: ["#f6c9d8", "#e0b8e8", "#c8d8f6", "#d8efdd"], // 呼吸流动的颜色组合
 // 修改这里：变成图片数组
-  bgImages: ["/images/bg-main.png"],
+  bgImages: ["/images/bg-main.webp"],
 
   // 4. 文章默认封面图 (当 Markdown 没写 cover 时显示)
   defaultPostCover: "/me.jpg",
@@ -54,7 +54,7 @@ export const siteConfig = {
   contentVisibility: {"photoWall": true, "moments": true, "chatters": true},
 
   // 👇 【新增】：全局背景弹幕配置
-  danmakuList: ["单文件，双击就跑", "深渊塔第 15 层见", "极光流体跑起来了吗", "今天十连金光了", "在爬塔，勿念", "报刊亭还有人看吗", "鲸鱼娘正在干饭", "再抽一发就睡觉", "小鲸鱼岛等风也等你", "零安装零依赖", "有花", "无实"],
+  danmakuList: ["一个 HTML 文件，一个小世界", "单文件，双击就跑", "极光流体", "深渊塔第 15 层见", "鲸鱼娘正在干饭", "再抽一发就睡觉", "小鲸鱼岛等风也等你", "零安装，零依赖", "报刊亭还有人看吗", "消逝进行时", "元素秘境", "诗落沙", "有花无实", "最美的相遇", "我开始当下的故事", "那段自由的日子", "我留心望向窗外的流连", "这里满是你的鱼儿自由游弋", "我便与你私奔于三维的人间", "未被冲散的脚印", "太白飒指天涯帆舟扬", "令姜妙智飞絮凝清霜", "像暖阳洒满潮湿夹缝的一丝", "请让我代替你前往未知的领域", "那我的信仰是你", "我将与你一同踏入黎明", "天上的玫瑰纷纷扬在地里", "我想这就是诗", "我应该向大大的世界寻一个小小的你", "二更处高楼亢歌", "将无尽思念化作草草想你"],
   gitalkConfig: {
     clientID: "Ov23lihERxoGKpFJTSgn",
     clientSecret: "9809ee1dc57b9785556091447ab665d786755231",
