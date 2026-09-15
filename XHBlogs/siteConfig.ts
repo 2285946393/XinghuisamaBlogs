@@ -19,10 +19,10 @@ export const siteConfig = {
 
   // 3. 网站背景设置 (二选一)
   // 如果想用纯图片背景，请在下面 bgImage 写路径，并将 useGradient 设为 false
-  useGradient: true,
+  useGradient: false,
   themeColors: ["#f6c9d8", "#e0b8e8", "#c8d8f6", "#d8efdd"], // 呼吸流动的颜色组合
 // 修改这里：变成图片数组
-  bgImages: [],
+  bgImages: ["/images/bg-main.png"],
 
   // 4. 文章默认封面图 (当 Markdown 没写 cover 时显示)
   defaultPostCover: "/me.jpg",
