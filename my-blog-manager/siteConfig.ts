@@ -29,7 +29,7 @@ export const siteConfig = {
 
   // 5. 首页照片墙预览图
   photoWallImage: "/me.jpg",
-  cloudMusicIds: [1297546435,1325165461,1325166262,1334295035,1351818694,1366566295,1377170593,1381703334,1383715787,1393412185,1398802958,1399064999,1399065003,1411827517,1439903907],
+  cloudMusicIds: [1297546435,1325165461,1334295035,1351818694,1366566295,1377170593,1381703334,1383715787,1393412185,1398802958,1399064999,1399065003,1411827517,1439903907],
   localMusic: [
     { src: "/music/almost-daybreak.mp3", title: "Almost Daybreak", artist: "钢铁与兔子 OST", cover: "/album/private-4a.jpg" },
     { src: "/music/emerald-lakeside-calm.mp3", title: "Emerald Lakeside - Calm", artist: "钢铁与兔子 OST", cover: "/album/private-4a.jpg" },
