@@ -300,5 +300,14 @@ export const projectsData: Project[] = [
     "description": "一罐会自己长大的糖果果冻：投喂、培育、看它膨胀得越来越诱人。",
     "icon": "🍮",
     "tags": ["可爱", "养成", "治愈"]
+  },
+  {
+    "id": "proj-ai-interviewer",
+    "name": "面试间 · AI 模拟面试官",
+    "githubUrl": "https://github.com/2285946393/ai-interviewer",
+    "demoUrl": "https://ai-interviewer-two-rosy.vercel.app",
+    "description": "一个能真跑起来的 AI 面试练习工具：按岗位出题、逐题点评追问、结束出结构化复盘报告。自研 BM25 中文检索做 RAG，三级降级保证不配 Key 也能走完全流程。",
+    "icon": "🎤",
+    "tags": ["AI 应用", "Next.js", "RAG", "开源重构"]
   }
 ];

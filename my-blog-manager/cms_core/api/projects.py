@@ -24,6 +24,8 @@ async def sync_projects(request: Request):
         json_str = json.dumps(projects_list, ensure_ascii=False, indent=2)
 
         # 构造格式
+        # ⚠️ 模板必须与 data/projects.ts 的既有结构一致：
+        #    缺少 demoUrl 会导致控制台保存时把站内作品链接整片覆盖掉。
         ts_content = (
             "// 🛡️ 本文件由控制台自动生成，请勿手动修改\n\n"
             "export type Project = {\n"
@@ -32,6 +34,7 @@ async def sync_projects(request: Request):
             "  description: string;\n"
             "  icon: string;\n"
             "  githubUrl: string;\n"
+            "  demoUrl?: string;\n"
             "  tags: string[];\n"
             "};\n\n"
             f"export const projectsData: Project[] = {json_str};"
