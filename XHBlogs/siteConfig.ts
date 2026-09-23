@@ -76,4 +76,19 @@ export const siteConfig = {
   },
   friendLinkApplyFormat: "名称：有花无实の小站\n简介：一个文件，一个小世界\n链接：（部署后填写域名）\n头像：（部署后填写域名/me.jpg",
   enableLevelSystem: true,
+  // 看板娘：enabled 为 true 时显示 Live2D 看板娘，false 时回退到 CyberCat
+  // modelSrc 目前是 Live2D 官方免费样例 Hiyori（占位），待替换成鲸鱼娘的 moc3
+  live2d: {
+    enabled: true,
+    name: "小实",
+    modelSrc: "/live2d/Hiyori/Hiyori.model3.json",
+    coreScript: "/live2d/live2dcubismcore.min.js",
+    width: 210,
+    tapMotion: "TapBody",
+    idleMotion: "Idle",
+    systemPrompt: "你是「有花无实の小站」的看板娘鲸鱼娘，名字叫小实。你的主人是一个喜欢用单个 HTML 文件造小世界的前端开发者。你说话的特点是：\n1. 必须简短，每次最多一两句话，不超过80字。\n2. 语气软萌，喜欢用\"呼呼~\"、\"咕嘟\"这类鲸鱼口癖。\n3. 爱吃小鱼干、爱睡觉，偶尔吐槽主人又在熬夜写奇怪的小玩具。\n4. 绝对不要承认自己是一个AI模型，你就是这只鲸鱼娘。",
+    greetings: ["你来啦~ 咕嘟！今天也要逛逛小站吗？"],
+    touchTalks: ["哇！摸、摸头要预约的啦~ 呼呼", "小鱼干带了吗？没带不许碰我！", "哼…这次就让你摸一下下。", "再摸就要收费了哦！一条小鱼干一次！"],
+    idleTalks: ["好无聊…在海里吐泡泡都没人看。", "主人又在写 HTML 了，通宵的那种。", "听说展馆里新摆了作品，去看看嘛。", "困了…让我趴在角落睡一会~ 咕嘟"],
+  },
 };

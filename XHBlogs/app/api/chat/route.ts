@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   console.log("🚀 [1/5] 路由进入：开始对接 Gemini 3 脑回路");
 
   try {
-    const { message } = await req.json();
+    const { message, persona } = await req.json();
 
     // 🌟 纯粹靠环境变量读取 API Key
     const apiKey = (process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || '').trim();
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         system_instruction: {
           parts: [{
-            text: siteConfig.geminiConfig.systemPrompt
+            text: (typeof persona === "string" && persona.trim()) ? persona : siteConfig.geminiConfig.systemPrompt
           }]
         },
         contents: [{
