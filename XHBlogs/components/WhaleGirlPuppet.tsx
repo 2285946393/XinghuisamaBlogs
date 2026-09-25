@@ -6,6 +6,11 @@ import { siteConfig } from '../siteConfig';
 
 const cfg = siteConfig.live2d;
 
+// 台词池：摸头时 = 原有摸头台词 + 余额鲸鱼娘台词；挂机时 = 原有挂机语录 + 余额鲸鱼娘台词
+const pick = (list: string[]) => list[Math.floor(Math.random() * list.length)];
+const TAP_TALKS = [...cfg.touchTalks, ...(cfg.whaleTalks || [])];
+const IDLE_TALKS = [...cfg.idleTalks, ...(cfg.whaleTalks || [])];
+
 // 程序化 2.5D 鲸鱼娘：单张透明立绘 + 呼吸/浮动/摇摆/视线倾斜/点击弹跳。
 // 不需要 .moc3，零模型下载；等有网跑 psd2live 出 moc3 后把 mode 改回 'live2d' 即可升级。
 export default function WhaleGirlPuppet() {
@@ -66,10 +71,10 @@ export default function WhaleGirlPuppet() {
   // 随机挂机语录
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!speech && !showInput && !isThinking && Math.random() > 0.7) {
-        poke(cfg.idleTalks[Math.floor(Math.random() * cfg.idleTalks.length)]);
+      if (!speech && !showInput && !isThinking && Math.random() > 0.45) {
+        poke(pick(IDLE_TALKS));
       }
-    }, 24000);
+    }, 16000);
     return () => clearInterval(timer);
   }, [speech, showInput, isThinking, poke]);
 
@@ -100,7 +105,7 @@ export default function WhaleGirlPuppet() {
 
   if (!cfg?.enabled) return null;
 
-  const tap = () => poke(cfg.touchTalks[Math.floor(Math.random() * cfg.touchTalks.length)]);
+  const tap = () => poke(pick(TAP_TALKS));
 
   return (
     <motion.div
