@@ -13,6 +13,7 @@ import GlobalToolbox from "../components/GlobalToolbox";
 import SplashScreen from "../components/SplashScreen";
 import CyberCat from '../components/CyberCat';
 import Live2DChan from '../components/Live2DChan';
+import WhaleGirlPuppet from '../components/WhaleGirlPuppet';
 import DanmakuBackground from '../components/DanmakuBackground';
 
 import MobileBackButton from '../components/MobileBackButton';
@@ -130,7 +131,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </MusicProvider>
 
           <div className="hidden md:block">
-            {siteConfig.live2d?.enabled ? <Live2DChan /> : <CyberCat />}
+            {!siteConfig.live2d?.enabled
+              ? <CyberCat />
+              : siteConfig.live2d.mode === "live2d"
+                ? <Live2DChan />
+                : <WhaleGirlPuppet />}
           </div>
 
         </ThemeProvider>
