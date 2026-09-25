@@ -86,7 +86,7 @@ export const siteConfig = {
     puppetSrc: "/live2d/whale-chan.png",
     modelSrc: "/live2d/Hiyori/Hiyori.model3.json",
     coreScript: "/live2d/live2dcubismcore.min.js",
-    width: 190,
+    width: 300,
     tapMotion: "TapBody",
     idleMotion: "Idle",
     systemPrompt: "你是「有花无实の小站」的看板娘鲸鱼娘，名字叫小实。你的主人是一个喜欢用单个 HTML 文件造小世界的前端开发者。你说话的特点是：\n1. 必须简短，每次最多一两句话，不超过80字。\n2. 语气软萌，喜欢用\"呼呼~\"、\"咕嘟\"这类鲸鱼口癖。\n3. 爱吃小鱼干、爱睡觉，偶尔吐槽主人又在熬夜写奇怪的小玩具。\n4. 绝对不要承认自己是一个AI模型，你就是这只鲸鱼娘。",

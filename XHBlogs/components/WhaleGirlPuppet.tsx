@@ -11,6 +11,13 @@ const pick = (list: string[]) => list[Math.floor(Math.random() * list.length)];
 const TAP_TALKS = [...cfg.touchTalks, ...(cfg.whaleTalks || [])];
 const IDLE_TALKS = [...cfg.idleTalks, ...(cfg.whaleTalks || [])];
 
+// 立绘里的气泡是画死的，装不下就出框 —— 字越多字号越小，按图片宽度换算
+const bubbleFontSize = (text: string, width: number) => {
+  const len = text.length;
+  const ratio = len <= 10 ? 0.072 : len <= 16 ? 0.063 : len <= 24 ? 0.055 : len <= 34 ? 0.048 : 0.042;
+  return Math.max(8, Math.round(width * ratio));
+};
+
 // 程序化 2.5D 鲸鱼娘：单张透明立绘 + 呼吸/浮动/摇摆/视线倾斜/点击弹跳。
 // 不需要 .moc3，零模型下载；等有网跑 psd2live 出 moc3 后把 mode 改回 'live2d' 即可升级。
 export default function WhaleGirlPuppet() {
@@ -114,25 +121,6 @@ export default function WhaleGirlPuppet() {
       transition={{ delay: 0.6, duration: 0.5 }}
       className="fixed bottom-4 right-4 z-[9998] flex flex-col items-center"
     >
-      {/* 气泡 */}
-      <div className="relative w-full flex justify-center mb-3">
-        <AnimatePresence>
-          {speech && (
-            <motion.div
-              key={speech}
-              initial={{ opacity: 0, y: 10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-              className="absolute bottom-0 bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-gray-200 px-4 py-3 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 text-sm max-w-[240px] break-words text-center leading-relaxed backdrop-blur-sm"
-              style={{ pointerEvents: 'none', transformOrigin: 'bottom center' }}
-            >
-              {speech}
-              <div className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-slate-800 border-b border-r border-gray-100 dark:border-slate-700 transform rotate-45"></div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
       {/* 聊天按钮 */}
       <button
         onClick={() => setShowInput(!showInput)}
@@ -165,11 +153,11 @@ export default function WhaleGirlPuppet() {
         )}
       </AnimatePresence>
 
-      {/* 鲸鱼娘本体：程序化形变 */}
+      {/* 鲸鱼娘本体：程序化形变 + 台词写进立绘自带的白色气泡 */}
       <motion.div
         onClick={tap}
-        style={{ scaleX, scaleY, y: bobY, rotate: tilt, transformOrigin: '50% 92%', touchAction: 'none' }}
-        className="cursor-pointer drop-shadow-[0_10px_18px_rgba(0,0,0,0.28)] select-none"
+        style={{ scaleX, scaleY, y: bobY, rotate: tilt, transformOrigin: '50% 92%', touchAction: 'none', width: cfg.width }}
+        className="relative cursor-pointer drop-shadow-[0_10px_18px_rgba(0,0,0,0.28)] select-none"
         title="点我"
       >
         <img
@@ -177,8 +165,35 @@ export default function WhaleGirlPuppet() {
           alt="鲸鱼娘小实"
           draggable={false}
           className="pointer-events-none"
-          style={{ width: cfg.width, height: 'auto', display: 'block' }}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
         />
+
+        {/* 覆盖在立绘白气泡内部：left/top/width/height 是按 whale-chan.png 量的（气泡内沿约 9%~79% × 3%~48%） */}
+        <AnimatePresence>
+          {speech && (
+            <motion.div
+              key={speech}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.25 } }}
+              className="absolute flex items-center justify-center text-center pointer-events-none"
+              style={{
+                // 字多的行更长，左右再收一点，免得顶到气泡弧线
+                left: speech.length > 24 ? '17%' : '14%',
+                top: '8%',
+                width: speech.length > 24 ? '56%' : '62%',
+                height: '34%',
+                color: '#2b3a6b',
+                fontWeight: 600,
+                fontFamily: '"Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif',
+                lineHeight: 1.28,
+                fontSize: bubbleFontSize(speech, cfg.width),
+              }}
+            >
+              {speech}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
