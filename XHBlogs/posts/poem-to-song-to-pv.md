@@ -7,11 +7,11 @@ tags:
 - 文字PV
 - 全流程
 mood: 写出来了，就交给读的人
-cover: /images/cover-poems.jpg
+cover: /images/cover-poem-pv.jpg
 description: 2022 年 6 月高二快结束时写的一首诗，在硬盘里躺了四年。今年翻出来，先变成歌，再变成文字 PV，最后投上了 B 站。这篇记整条链路：AI 写歌、语音识别自动对轴、逐句配画面，以及踩过的每一脚坑。
 ---
 
-![封面](/images/cover-poems.jpg)
+![封面](/images/cover-poem-pv.jpg)
 
 2022 年 6 月，高二快结束。那阵子每天放学回家，路上看到的都是差不多的东西：月光、楼宇、街口、群山、晚风、草木，和偶尔经过的人。我把它们一天天攒下来，攒成了一首《月下散步闲赋记》。
 
