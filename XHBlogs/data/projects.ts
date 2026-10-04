@@ -12,6 +12,42 @@ export type Project = {
 
 export const projectsData: Project[] = [
   {
+    "id": "lab-blackhole",
+    "name": "实时黑洞 · 视界",
+    "githubUrl": "",
+    "demoUrl": "/lab/blackhole.html",
+    "description": "浏览器里实时解引力弯曲：光线绕着黑洞拐弯、吸积盘一半亮一半暗。可拖拽、可调引力系数，静止时自动累积降噪。单文件零依赖。",
+    "icon": "🕳️",
+    "tags": ["WebGL", "物理", "实时渲染"]
+  },
+  {
+    "id": "lab-event-horizon",
+    "name": "视界 · 黑洞项目页",
+    "githubUrl": "",
+    "demoUrl": "/lab/event-horizon.html",
+    "description": "把上面那个黑洞讲清楚：每个像素怎么被掰弯、多普勒为什么让盘一半亮一半暗、HDR+泛光+累积怎么做出质感。英雄区背景就是实时渲染。",
+    "icon": "🌑",
+    "tags": ["说明页", "WebGL", "可视化"]
+  },
+  {
+    "id": "lab-fourier",
+    "name": "傅里叶游乐场",
+    "githubUrl": "",
+    "demoUrl": "/lab/fourier.html",
+    "description": "右边是图片的频谱，用鼠标抹掉哪一块，左边就少掉哪一部分信息——每一笔都是一次真正的逆傅里叶变换（浏览器里跑完整 2D FFT）。",
+    "icon": "🌈",
+    "tags": ["算法", "FFT", "交互"]
+  },
+  {
+    "id": "lab-holo-cards",
+    "name": "全息典藏卡册",
+    "githubUrl": "",
+    "demoUrl": "/lab/holo-cards.html",
+    "description": "五张徽记卡：能拖拽转、能翻面，珠光/银箔/烫金/原画四种卡面，鼠标一晃镭射彩虹跟着视角走，还能一键存图。",
+    "icon": "🃏",
+    "tags": ["3D", "材质", "卡片"]
+  },
+  {
     "id": "proj_1775049332705",
     "name": "Computational Chemistry Tool",
     "githubUrl": "https://github.com/heiehiehi/Computational_Chemistry_Tool",
